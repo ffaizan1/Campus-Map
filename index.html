@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="location.png">
+    <title>NEIU Campus Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #map { 
+            height: 100%; 
+            width: 100%;
+        }
+
+        .map-heading {
+            position: absolute;
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.8); 
+            border: 2px solid black; 
+            border-radius: 50px;
+            z-index: 1000;
+            text-align: center;
+            font-weight: bold;
+        }
+/* Default legend style for desktop */
+.legend {
+    position: absolute;
+    bottom: 20px;
+    right: 5px;
+    background-color: white;
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+/* Hide legend on mobile devices*/
+@media only screen and (max-width:768px){
+       .legend{display:none! important;
+	   /* Ensure this style overrides any conflicts*/
+	   }
+}
+        /* Style for the north arrow */
+        .north-arrow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 5px;
+            border: 2px solid black;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 class="map-heading">Welcome to NEIU Campus Map</h1>
+
+    <div id="map"></div>
+
+    <!-- Legend with checkboxes for toggling markers -->
+    <div class="legend">
+        <h4>Legend</h4>
+        <label><input type="checkbox" id="libraryCheckbox" checked>Library</label><br>
+        <label><input type="checkbox" id="unionCheckbox" checked>Student Union</label><br>
+        <label><input type="checkbox" id="parkingCheckbox" checked>Parking Lot</label><br>
+        <label><input type="checkbox" id="sportsCheckbox" checked>Physical Education Complex</label><br>
+        <label><input type="checkbox" id="distanceeducationCheckbox" checked>International Programs</label><br>
+        <label><input type="checkbox" id="houseCheckbox" checked>The Nest</label><br>
+        <label><input type="checkbox" id="scienceCheckbox" checked>Science Building</label><br>
+        <label><input type="checkbox" id="mathematicsCheckbox" checked>Mathematics Department</label><br>
+        <label><input type="checkbox" id="policestationCheckbox" checked>Police Station</label>
+    </div>
+
+    <!-- North Arrow Image -->
+    <div class="north-arrow">
+        <img src="north.png" alt="North Arrow" style="width: 50px;">
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="text/javascript">
+        var map = L.map('map', {
+            center: [41.9811, -87.7194],
+            zoom: 17
+        });
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 18,
+            minZoom: 16
+        }).addTo(map);
+		
+        var pic1 = '<img src="https://neiuindependent.org/wp-content/uploads/2020/03/Nest-2.jpg" alt="neiuindependent" width="100">';
+        var pic2 = '<img src="https://www.neiu.edu/sites/default/files/styles/feature_image/public/hub.neiu.edu/news-images/2017/01/19/LOC-main-campus-library.jpg?itok=o60iSavx" alt="library" width="200">';
+        var pic3 = '<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBjna3TjoQhcOGYEdQAMUXgvIswliaJrth2A&s" alt="police" width="150">';
+        var pic4 = '<img src="https://www.neiu.edu/sites/default/files/styles/feature_image/public/news-images/2020/06/12/Student_Union.jpg?itok=r1-PCUT8" alt="union" width="150">';
+        var pic5 = '<img src="https://www.neiu.edu/sites/default/files/styles/feature_image/public/university-life/unit-dept-homepage-feature-images/2016/02/15/campus-rec-center.jpg?itok=4lc-4EYE" alt="union" width="150">';
+  
+        // Marker definitions
+        var libraryMarker = L.marker([41.9802643,-87.7192012], { icon: L.icon({ iconUrl: 'library.png', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -10] }) }).bindPopup('<p<b>Ronald Williams Library<br><a href="https://www.neiu.edu/neiu-libraries"target="_blank">Visit Website</a></p>'+pic2);
+        var unionMarker = L.marker([41.981215,-87.7193881], { icon: L.icon({ iconUrl: 'union.png', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0,-10] }) }).bindPopup('<p><b>Student Union Building Hours<br>8:00 a.m.-10:00 p.m.<br> Monday through Friday</p>'+pic4);
+        var parkingMarker = L.marker([41.981140,-87.720160], { icon: L.icon({ iconUrl: 'parking.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Parking Lot F</p>');
+        var sportsMarker = L.marker([41.977663,-87.717331], { icon: L.icon({ iconUrl: 'sports.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Physical Education Complex<br><a href="https://www.neiu.edu/university-life/campus-recreation"target="_blank">Visit Website</a></p>'+pic5);
+        var distanceeducationMarker = L.marker([41.98263,-87.7184833], { icon: L.icon({ iconUrl: 'distanceeducation.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Office of International<br>Programs<br><a href="https://www.neiu.edu/academics/our-centers-and-programs/international-programs"target="_blank">Visit Website</a></p>');
+        var houseMarker = L.marker([41.979685,-87.719597], { icon: L.icon({ iconUrl: 'house.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Student Housing<br><a href="https://www.americancampus.com/student-apartments/il/chicago/neiu-student-housing#gallery"target="_blank">Visit Website</a></p>'+ pic1);
+       var scienceMarker = L.marker([41.9805061,-87.7165608], { icon: L.icon({ iconUrl: 'science.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10]})}).bindPopup('<p><b>Bernard J.Brommel Hall<br><b>College of Arts and Sciences<br><a href="https://www.neiu.edu/academics/college-of-arts-and-sciences"target="_blank">Visit Website</a></p>');
+        var mathematicsMarker = L.marker([41.9803643,-87.7170288], { icon: L.icon({ iconUrl: 'mathematics.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Mathematics Department</p>');
+        var policestationMarker = L.marker([41.9807473,-87.7205188], { icon: L.icon({ iconUrl: 'policestation.png', iconSize: [35, 35], iconAnchor: [17, 17], popupAnchor: [0, -10] }) }).bindPopup('<p><b>Campus Police Station<br><a href="tel:+17734424100">Call Us:+1(773)442-4100</a></p>'+pic3);
+
+        // Add markers to map by default
+        libraryMarker.addTo(map);
+        unionMarker.addTo(map);
+        parkingMarker.addTo(map);
+        sportsMarker.addTo(map);
+        distanceeducationMarker.addTo(map);
+        houseMarker.addTo(map);
+        scienceMarker.addTo(map);
+        mathematicsMarker.addTo(map);
+        policestationMarker.addTo(map);
+
+        // Toggle marker visibility based on checkbox state
+        document.getElementById('libraryCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                libraryMarker.addTo(map);
+            } else {
+                map.removeLayer(libraryMarker);
+            }
+        });
+
+        document.getElementById('unionCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                unionMarker.addTo(map);
+            } else {
+                map.removeLayer(unionMarker);
+            }
+        });
+
+        document.getElementById('parkingCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                parkingMarker.addTo(map);
+            } else {
+                map.removeLayer(parkingMarker);
+            }
+        });
+
+        document.getElementById('sportsCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                sportsMarker.addTo(map);
+            } else {
+                map.removeLayer(sportsMarker);
+            }
+        });
+
+        document.getElementById('distanceeducationCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                distanceeducationMarker.addTo(map);
+            } else {
+                map.removeLayer(distanceeducationMarker);
+            }
+        });
+
+        document.getElementById('houseCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                houseMarker.addTo(map);
+            } else {
+                map.removeLayer(houseMarker);
+            }
+        });
+
+        document.getElementById('scienceCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                scienceMarker.addTo(map);
+            } else {
+                map.removeLayer(scienceMarker);
+            }
+        });
+
+        document.getElementById('mathematicsCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                mathematicsMarker.addTo(map);
+            } else {
+                map.removeLayer(mathematicsMarker);
+            }
+        });
+
+        document.getElementById('policestationCheckbox').addEventListener('change', function() {
+            if (this.checked) {
+                policestationMarker.addTo(map);
+            } else {
+                map.removeLayer(policestationMarker);
+            }
+        });
+    </script>
+</body>
+</html>
